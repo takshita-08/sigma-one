@@ -19,6 +19,7 @@ class Login:
     def login_fnc(self, username, password):
         self.username.fill(username)
         self.password.fill(password)
+        self.page.wait_for_timeout(1000)
         self.login_btn.click()
 
         try:
