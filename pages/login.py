@@ -6,7 +6,7 @@ class Login:
         self.page = page
         self.username = page.get_by_test_id("testUsername")
         self.password = page.get_by_test_id("testPassword")
-        self.login_btn = page.get_by_role("button", name="Login")
+        self.login_btn = page.locator("#mt-loginBtn")
         self.error = page.get_by_test_id("testError")
         self.toast = page.locator(".Toastify__toast")
         self.title = page.get_by_role("heading", name="Log in to your account")
@@ -23,7 +23,7 @@ class Login:
         self.login_btn.click()
 
         try:
-            self.confirm_btn.wait_for(state="visible", timeout=5000)
+            self.confirm_btn.wait_for(state="visible", timeout=7000)
             self.confirm_btn.click()
         except (TimeoutError, AssertionError):
             pass  

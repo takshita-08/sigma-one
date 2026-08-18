@@ -5,11 +5,13 @@ import logging
 import pytest
 from playwright.sync_api import sync_playwright
 from pages.start_test import StartTest
-from utils.config import CENTRA_USERNAME, CENTRA_PASSWORD, DEVICE_ID, DEVICE_SERIAL, TEMPLATE_NAME, SAME_AS_TEST_NAME, DETACH_ATTACH, IS_SCENARIO, CREATE_TEMPLATE, EDIT_TEMPLATE,FILE_PREFIX
+from utils import config
+from utils.config import CENTRA_USERNAME, CENTRA_PASSWORD, DEVICE_ID, DEVICE_SERIAL, TEMPLATE_NAME, SAME_AS_TEST_NAME, DETACH_ATTACH, IS_SCENARIO, CREATE_TEMPLATE, EDIT_TEMPLATE,FILE_PREFIX, UPDATE_URL
 from pages.login import Login
 from pages.selectDevice import SelectDevice
 from pages.stop_test import StopTest
 from pages.uploaded_files import UploadedFiles
+from pages.context_menu import ContextMenu
 import pytest_html
 
 
@@ -33,7 +35,7 @@ def pytest_runtest_makereport(item, call):
 @pytest.fixture(scope="function")
 def page():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=False)
         context = browser.new_context(
         ignore_https_errors=True)
         page = context.new_page()
@@ -91,3 +93,13 @@ def check_uploaded_files(stop_test,file_name):
     logging.info(f"🔹 Searching for '{file_name}'")
     files = upload.search_files(file_name)
     return upload, files
+
+@pytest.fixture(scope="function")
+def context_menu(select_device):
+    context_menu = ContextMenu(select_device.page)
+    return context_menu
+
+@pytest.fixture(scope="function")
+def override_config_for_update_url(monkeypatch):
+    print("🔹 override_config_for_update_url: Overriding BASE_URL for update URL test.")
+    monkeypatch.setattr(config, "BASE_URL", UPDATE_URL)

@@ -1,9 +1,5 @@
-
-
 import logging
-
 import pytest
-
 
 def test_uploaded_files_tab(check_uploaded_files):
 
